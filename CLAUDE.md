@@ -153,3 +153,31 @@ API routes are pre-stubbed with comments showing exact implementation steps:
 - Never store subscription state only in Stripe — mirror to a `subscriptions` table in Supabase
 - Webhook handler must be idempotent (Stripe can retry events)
 - `NEXT_PUBLIC_APP_URL` must be set for redirect URLs to work
+
+---
+
+## Internal Tool Extensions
+
+### DataTable component
+`src/components/data/DataTable.tsx` — generic, typed. Pass `columns` and `data`. The `render` prop lets you customize any cell (badges, links, etc.).
+
+### CrudModal component
+`src/components/forms/CrudModal.tsx` — drives create and edit flows from the same `FieldDef[]` array. Supports text, email, number, textarea, select.
+
+### CSV export
+`src/lib/export-csv.ts` — client-side only (uses `Blob + URL.createObjectURL`). Import and call `exportCsv(data, columns, filename)` from a button click handler.
+
+### Adding a new resource
+Duplicate `RESOURCE_SLUG/` directory, rename it, update:
+1. `TRow` interface — match your Supabase table schema
+2. `COLUMNS` — drives table headers + cell rendering
+3. `FIELDS` — drives modal form inputs
+4. API routes — replace `RESOURCE_TABLE` with Supabase table name
+5. Add nav entry in `Sidebar.tsx`
+6. Write migration in `migrations/`
+
+### CRUD patterns
+- Always enforce `user_id = session.user.id` in PATCH/DELETE — prevents cross-user data access
+- GET can skip `user_id` filter if data is org-scoped (adjust as needed)
+- Add Zod validation on POST/PATCH before hitting Supabase
+- Return `204 No Content` on successful DELETE (not 200)
