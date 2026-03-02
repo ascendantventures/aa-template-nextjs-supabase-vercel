@@ -42,3 +42,34 @@ The BUILD agent implements:
 - API routes for domain entities
 - Dashboard pages
 - Domain-specific components
+
+---
+
+## SaaS Extensions (added by feat/saas-extensions)
+
+### Sidebar nav
+File: `src/components/layout/Sidebar.tsx`
+
+| Token | Description |
+|---|---|
+| `{{PRODUCT_NAME}}` | App name in sidebar logo |
+| `{{NAV_ITEM_2_LABEL}}` through `{{NAV_ITEM_4_LABEL}}` | Nav section labels |
+| `{{NAV_ITEM_2_SLUG}}` through `{{NAV_ITEM_4_SLUG}}` | URL slugs (e.g. `clients`, `projects`) |
+
+### Billing page
+File: `src/app/(dashboard)/billing/page.tsx`
+
+| Token | Description |
+|---|---|
+| `{{PLAN_1_NAME}}` / `{{PLAN_2_NAME}}` | Plan tier names |
+| `{{PLAN_1_PRICE}}` / `{{PLAN_2_PRICE}}` | Price strings (e.g. `$29`) |
+| `{{PLAN_X_DESCRIPTION}}` | One-line plan description |
+| `{{PLAN_X_FEATURE_Y}}` | Feature list items |
+
+After replacing tokens: update `stripePriceId` fields with real Stripe price IDs.
+
+### Stripe setup
+1. Add env vars: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `NEXT_PUBLIC_APP_URL`
+2. Uncomment Stripe code in `/api/billing/checkout/route.ts` and `/api/billing/portal/route.ts`
+3. Register webhook URL in Stripe dashboard → Webhooks → Add endpoint: `https://your-domain.com/api/billing/webhook`
+4. Enable events: `customer.subscription.created`, `customer.subscription.updated`, `customer.subscription.deleted`

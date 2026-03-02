@@ -120,3 +120,36 @@ After adding new tables:
 - ❌ Don't add pages outside `(auth)` or `(dashboard)` unless they're truly public
 - ❌ Don't use `npm` or `yarn` — pnpm only
 - ❌ Don't put business logic in layout files
+
+---
+
+## SaaS Extensions
+
+### Sidebar
+`src/components/layout/Sidebar.tsx` — update `NAV_ITEMS` array with your app's sections.
+Replace `{{NAV_ITEM_X_LABEL}}` and `{{NAV_ITEM_X_SLUG}}` tokens.
+
+### Settings
+`src/app/(dashboard)/settings/page.tsx` — add real form fields with server actions.
+The "Delete account" button needs a server action wired to Better Auth + Supabase.
+
+### Billing
+`src/app/(dashboard)/billing/page.tsx` — replace `PLANS` array with real pricing.
+
+**Stripe integration pattern:**
+```ts
+import Stripe from "stripe";
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+```
+
+API routes are pre-stubbed with comments showing exact implementation steps:
+- `/api/billing/checkout` — creates checkout session
+- `/api/billing/portal` — Stripe customer portal redirect
+- `/api/billing/webhook` — handles subscription lifecycle events
+
+**PATTERN 23 applies**: ship with Stripe stubs for MVP. Real keys go in Vercel env vars post-deploy.
+
+### Critical rules for SaaS apps
+- Never store subscription state only in Stripe — mirror to a `subscriptions` table in Supabase
+- Webhook handler must be idempotent (Stripe can retry events)
+- `NEXT_PUBLIC_APP_URL` must be set for redirect URLs to work
