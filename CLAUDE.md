@@ -181,3 +181,8 @@ Duplicate `RESOURCE_SLUG/` directory, rename it, update:
 - GET can skip `user_id` filter if data is org-scoped (adjust as needed)
 - Add Zod validation on POST/PATCH before hitting Supabase
 - Return `204 No Content` on successful DELETE (not 200)
+
+## Vercel Deploy Configuration
+- **Do NOT add  to next.config** unless the spec explicitly requires a static site
+- The app is deployed to Vercel with SSR enabled — static export breaks API routes, middleware, and Server Components
+- If you need static pages, use  instead
