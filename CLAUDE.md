@@ -183,6 +183,8 @@ Duplicate `RESOURCE_SLUG/` directory, rename it, update:
 - Return `204 No Content` on successful DELETE (not 200)
 
 ## Vercel Deploy Configuration
-- **Do NOT add  to next.config** unless the spec explicitly requires a static site
-- The app is deployed to Vercel with SSR enabled — static export breaks API routes, middleware, and Server Components
-- If you need static pages, use  instead
+- **Do NOT add `output: "export"` to next.config** unless the spec explicitly requires a static site with no server-side features
+- The app deploys to Vercel with SSR — static export breaks API routes, middleware, and Server Components
+- For static pages, use `generateStaticParams()` instead of `output: "export"`
+- Vercel will fail with NEXT_NO_ROUTES_MANIFEST if static export is used with the nextjs framework preset
+
