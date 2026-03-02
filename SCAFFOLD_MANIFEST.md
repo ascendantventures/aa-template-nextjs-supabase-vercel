@@ -73,3 +73,30 @@ After replacing tokens: update `stripePriceId` fields with real Stripe price IDs
 2. Uncomment Stripe code in `/api/billing/checkout/route.ts` and `/api/billing/portal/route.ts`
 3. Register webhook URL in Stripe dashboard → Webhooks → Add endpoint: `https://your-domain.com/api/billing/webhook`
 4. Enable events: `customer.subscription.created`, `customer.subscription.updated`, `customer.subscription.deleted`
+
+---
+
+## Internal Tool Extensions (added by feat/internal-tool-extensions)
+
+### Resource page
+Directory: `src/app/(dashboard)/RESOURCE_SLUG/`
+
+| Token | Description |
+|---|---|
+| `RESOURCE_SLUG` | URL slug + directory name (e.g. `clients`, `orders`) |
+| `RESOURCE_NAME_PLURAL` | Display name plural (e.g. "Clients") |
+| `RESOURCE_NAME_SINGULAR` | Display name singular (e.g. "Client") |
+| `RESOURCE_TABLE` | Supabase table name |
+
+### Shared components
+- `src/components/data/DataTable.tsx` — sortable, searchable, paginated table (generic)
+- `src/components/forms/CrudModal.tsx` — create/edit modal with field definitions
+- `src/lib/export-csv.ts` — client-side CSV export
+
+### After scaffolding
+1. Rename `RESOURCE_SLUG/` directory to your resource name
+2. Replace `TRow` interface with your actual data shape
+3. Update `COLUMNS` and `FIELDS` arrays in the page component
+4. Update `RESOURCE_TABLE` in API route files
+5. Add nav entry in `Sidebar.tsx` `NAV_ITEMS`
+6. Create Supabase migration for your table (see `migrations/` directory)
